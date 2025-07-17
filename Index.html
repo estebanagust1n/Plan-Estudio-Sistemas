@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan de Estudios - Licenciatura en Sistemas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="titulo-con-logo">
+    <img src="uba-logo.png" alt="UBA" class="logo-uba" />
+    <h1>Licenciatura en Sistemas</h1>
+  </div>
+
+  <div class="main-container">
+    <h2>Primer Tramo</h2>
+    <div class="materias-grid tramo-1">
+      <div class="materia aprobada">
+        <div class="header">
+          <span class="nota">8</span>
+          <span class="codigo">241</span>
+          <span class="carga">6VH</span>
+        </div>
+        <div class="nombre">Análisis Matemático I</div>
+      </div>
+    </div>
+
+    <h2>Segundo Tramo</h2>
+    <div class="materias-grid tramo-2">
+      <div class="materia aprobada">
+        <div class="header">
+          <span class="nota">7</span>
+          <span class="codigo">245</span>
+          <span class="carga">6VH</span>
+        </div>
+        <div class="nombre">Álgebra</div>
+      </div>
+    </div>
+
+    <h2>Ciclo Profesional</h2>
+    <div class="materias-grid ciclo-profesional">
+      <div class="materia aprobada">
+        <div class="header">
+          <span class="nota">9</span>
+          <span class="codigo">301</span>
+          <span class="carga">8VH</span>
+        </div>
+        <div class="nombre">Ingeniería del Software</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="boton-container">
+    <button onclick="exportarPantalla()">📄 Exportar PDF</button>
+  </div>
+
+  <script src="html2canvas.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
