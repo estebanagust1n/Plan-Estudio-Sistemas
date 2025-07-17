@@ -1,0 +1,128 @@
+[
+  {
+    "codigo": "241",
+    "nombre": "Análisis Matemático I",
+    "carga_horaria": "6VH",
+    "tramo": "Primer tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "242",
+    "nombre": "Economía",
+    "carga_horaria": "4VH",
+    "tramo": "Primer tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "245",
+    "nombre": "Álgebra",
+    "carga_horaria": "6VH",
+    "tramo": "Primer tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "247",
+    "nombre": "Informática I",
+    "carga_horaria": "6VH",
+    "tramo": "Primer tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "248",
+    "nombre": "Contabilidad",
+    "carga_horaria": "6VH",
+    "tramo": "Primer tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "249",
+    "nombre": "Matemática Discreta",
+    "carga_horaria": "4VH",
+    "tramo": "Primer tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "250",
+    "nombre": "Análisis Matemático II",
+    "carga_horaria": "6VH",
+    "tramo": "Segundo tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "251",
+    "nombre": "Estadística",
+    "carga_horaria": "6VH",
+    "tramo": "Segundo tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "252",
+    "nombre": "Informática II",
+    "carga_horaria": "6VH",
+    "tramo": "Segundo tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "253",
+    "nombre": "Administración General",
+    "carga_horaria": "6VH",
+    "tramo": "Segundo tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "254",
+    "nombre": "Derecho",
+    "carga_horaria": "4VH",
+    "tramo": "Segundo tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "255",
+    "nombre": "Sistemas y Organizaciones",
+    "carga_horaria": "6VH",
+    "tramo": "Segundo tramo",
+    "nota": ""
+  },
+  {
+    "codigo": "256",
+    "nombre": "Análisis de Sistemas",
+    "carga_horaria": "6VH",
+    "tramo": "Ciclo Profesional",
+    "nota": ""
+  },
+  {
+    "codigo": "257",
+    "nombre": "Diseño de Sistemas",
+    "carga_horaria": "6VH",
+    "tramo": "Ciclo Profesional",
+    "nota": ""
+  },
+  {
+    "codigo": "258",
+    "nombre": "Administración de Recursos",
+    "carga_horaria": "6VH",
+    "tramo": "Ciclo Profesional",
+    "nota": ""
+  },
+  {
+    "codigo": "259",
+    "nombre": "Ingeniería de Software",
+    "carga_horaria": "6VH",
+    "tramo": "Ciclo Profesional",
+    "nota": ""
+  },
+  {
+    "codigo": "260",
+    "nombre": "Proyecto Final",
+    "carga_horaria": "6VH",
+    "tramo": "Ciclo Profesional",
+    "nota": ""
+  },
+  {
+    "codigo": "261",
+    "nombre": "Seguridad Informática",
+    "carga_horaria": "6VH",
+    "tramo": "Ciclo Profesional",
+    "nota": ""
+  }
+]
