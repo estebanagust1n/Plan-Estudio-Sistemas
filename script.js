@@ -1,131 +1,85 @@
-let materias = [];
-let aprobadas = JSON.parse(localStorage.getItem("aprobadas") || "{}");
+let materias = [], aprobadas = JSON.parse(localStorage.getItem("aprobadas")||"{}");
 
 fetch("materias.json")
-  .then((res) => res.json())
-  .then((data) => {
-    materias = data;
-    renderMaterias();
-    actualizarResumen();
+  .then(r=>r.json()).then(d=>{
+    materias=d;
+    init();
   });
 
-function renderMaterias() {
-  const primer = document.querySelector("#primer-tramo .columnas");
-  const segundo = document.querySelector("#segundo-tramo .columnas");
-  const ciclo = document.querySelector("#ciclo-profesional .columnas");
+function init(){
+  aplicarColumnas();
+  renderMaterias();
+  actualizarResumen();
+}
 
-  primer.innerHTML = segundo.innerHTML = ciclo.innerHTML = "";
+function aplicarColumnas(){
+  document.querySelectorAll(".columnas").forEach(c=>{
+    let cols=+c.dataset.cols;
+    c.style.setProperty("--cols", cols);
+  });
+}
 
-  materias.forEach((m) => {
-    const div = document.createElement("div");
-    div.className = "materia";
-    div.dataset.codigo = m.codigo;
+function renderMaterias(){
+  const conts = {
+    1: document.querySelector("#primer-tramo .columnas"),
+    2: document.querySelector("#segundo-tramo .columnas"),
+    3: document.querySelector("#ciclo-profesional .columnas")
+  };
+  Object.values(conts).forEach(el=>el.innerHTML="");
 
-    // Agregar contenido interno
-    const infoSup = document.createElement("div");
-    infoSup.className = "info-superior";
+  materias.forEach(m=>{
+    const d=document.createElement("div"), inf=document.createElement("div"),
+      inp=document.createElement("input"), cod=document.createElement("div"),
+      cyc=document.createElement("div"), nom=document.createElement("div");
+    d.className="materia";
+    inf.className="info-superior";
+    inp.className="nota-input"; inp.type="number"; inp.min=1; inp.max=10;
+    inp.value=aprobadas[m.codigo]||"";
+    cod.textContent=m.codigo; cyc.textContent=m.carga_horaria;
+    nom.className="nombre-materia"; nom.textContent=m.nombre;
 
-    // Nota (editable input)
-    const notaBox = document.createElement("div");
-    const notaInput = document.createElement("input");
-    notaInput.className = "nota-input";
-    notaInput.placeholder = "Nota";
-    notaInput.value = aprobadas[m.codigo] || "";
-    notaInput.addEventListener("change", () => {
-      const nota = parseInt(notaInput.value);
-      if (!isNaN(nota) && nota >= 1 && nota <= 10) {
-        aprobadas[m.codigo] = nota;
-      } else {
-        delete aprobadas[m.codigo];
-        notaInput.value = "";
-      }
-      localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
-      renderMaterias();
-      actualizarResumen();
-    });
-    notaBox.appendChild(notaInput);
+    inf.append(inp,cod,cyc); d.append(inf,nom);
+    conts[m.tramo].append(d);
 
-    // Código
-    const codigoBox = document.createElement("div");
-    codigoBox.textContent = m.codigo;
+    const aprob = !!aprobadas[m.codigo];
+    const habil = m.correlativas.every(c=>aprobadas[c]);
 
-    // Carga horaria
-    const cargaBox = document.createElement("div");
-    cargaBox.textContent = m.carga_horaria;
+    if(aprob){d.classList.add("aprobada");}
+    else if(habil){d.classList.add("habilitada");}
+    else {d.classList.add("bloqueada"); d.classList.add("disabled");}
 
-    infoSup.appendChild(notaBox);
-    infoSup.appendChild(codigoBox);
-    infoSup.appendChild(cargaBox);
-
-    const nombreDiv = document.createElement("div");
-    nombreDiv.className = "nombre-materia";
-    nombreDiv.textContent = m.nombre;
-
-    div.appendChild(infoSup);
-    div.appendChild(nombreDiv);
-
-    // Colores según estado
-    if (aprobadas[m.codigo]) {
-      div.classList.add("aprobada");
-    } else if (m.correlativas.every((c) => aprobadas[c])) {
-      div.classList.add("habilitada");
-    } else {
-      div.classList.add("bloqueada");
+    if(!aprob && habil){
+      d.addEventListener("click",()=> inp.focus());
     }
 
-    // Hover para resaltar correlativas
-    div.addEventListener("mouseenter", () => {
-      m.correlativas.forEach((codigo) => {
-        const correlativa = document.querySelector(`[data-codigo="${codigo}"]`);
-        if (correlativa && !aprobadas[codigo]) {
-          correlativa.classList.add("resaltada");
-        }
-      });
+    inp.addEventListener("change", ()=>{
+      const v=parseInt(inp.value);
+      if(v>=1 && v<=10) {
+        aprobadas[m.codigo]=v;
+        d.classList.replace("habilitada","aprobada");
+      } else { delete aprobadas[m.codigo]; d.classList.remove("aprobada"); }
+      localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
+      actualizarResumen(); renderMaterias();
     });
-
-    div.addEventListener("mouseleave", () => {
-      document.querySelectorAll(".resaltada").forEach((el) => {
-        el.classList.remove("resaltada");
-      });
-    });
-
-    // Insertar según tramo
-    if (m.tramo === 1) primer.appendChild(div);
-    else if (m.tramo === 2) segundo.appendChild(div);
-    else ciclo.appendChild(div);
   });
 }
 
-function actualizarResumen() {
-  const total = materias.length;
-  const aprobadasList = Object.keys(aprobadas);
-  const cantAprobadas = aprobadasList.length;
-  const avance = ((cantAprobadas / total) * 100).toFixed(1);
-
-  const notas = aprobadasList.map((codigo) => Number(aprobadas[codigo]));
-  const promedio =
-    notas.length > 0
-      ? (notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(2)
-      : "0.00";
-
-  document.getElementById("avance").textContent = `${cantAprobadas} materias aprobadas — Avance: ${avance}%`;
-  document.getElementById("promedio").textContent = `Promedio: ${promedio}`;
-
-  const exportacion = document.getElementById("exportacion");
-  exportacion.innerHTML = "";
-  aprobadasList.forEach((codigo) => {
-    const materia = materias.find((m) => m.codigo === codigo);
-    const div = document.createElement("div");
-    div.textContent = `${materia.nombre}: ${aprobadas[codigo]}`;
-    exportacion.appendChild(div);
+function actualizarResumen(){
+  const ap = Object.keys(aprobadas);
+  const prom = ap.length ? (ap.reduce((sum,c)=>sum+aprobadas[c],0)/ap.length).toFixed(2):"0.00";
+  const avance = ((ap.length/materias.length)*100).toFixed(1);
+  document.getElementById("promedio").textContent=`Promedio: ${prom}`;
+  document.getElementById("avance").textContent=`${ap.length} materias aprobadas — Avance: ${avance}%`;
+  const ex = document.getElementById("exportacion"); ex.innerHTML="";
+  ap.forEach(c=>{
+    const m=materias.find(x=>x.codigo===c);
+    ex.innerHTML+=`<div>${m.nombre}: ${aprobadas[c]}</div>`;
   });
 }
 
-function exportarResumen() {
-  html2canvas(document.body).then((canvas) => {
-    const link = document.createElement("a");
-    link.download = "resumen.png";
-    link.href = canvas.toDataURL();
-    link.click();
+function exportarResumen(){
+  html2canvas(document.body).then(c=> {
+    const a=document.createElement("a");
+    a.download="resumen.png"; a.href=c.toDataURL(); a.click();
   });
 }
