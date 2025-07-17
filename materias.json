@@ -1,12 +1,274 @@
 [
-  {"codigo":"241","nombre":"Análisis Matemático I","tramo":"Primer Tramo","horas":6,"correlativas":[]},
-  {"codigo":"242","nombre":"Economía","tramo":"Primer Tramo","horas":4,"correlativas":[]},
-  {"codigo":"245","nombre":"Álgebra","tramo":"Primer Tramo","horas":4,"correlativas":[]},
-  {"codigo":"246","nombre":"Historia económica y social general","tramo":"Primer Tramo","horas":4,"correlativas":[]},
-  {"codigo":"252","nombre":"Administración general","tramo":"Primer Tramo","horas":4,"correlativas":[]},
-  {"codigo":"254","nombre":"Sociología de las organizaciones","tramo":"Primer Tramo","horas":4,"correlativas":[]},
-  {"codigo":"248","nombre":"Estadística I","tramo":"Segundo Tramo","horas":6,"correlativas":["241"]},
-  {"codigo":"274","nombre":"Sistemas Administrativos","tramo":"Segundo Tramo","horas":4,"correlativas":["252"]},
-  {"codigo":"250","nombre":"Microeconomía I","tramo":"Segundo Tramo","horas":4,"correlativas":["242"]},
-  {"codigo":"247","nombre":"Teoría contable","tramo":"Segundo Tramo","horas":6,"correlativas":["252"]}
+  {
+    "codigo": "241",
+    "nombre": "Análisis Matemático I",
+    "tramo": "Primer Tramo",
+    "horas": 6,
+    "correlativas": []
+  },
+  {
+    "codigo": "242",
+    "nombre": "Economía",
+    "tramo": "Primer Tramo",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "245",
+    "nombre": "Álgebra",
+    "tramo": "Primer Tramo",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "246",
+    "nombre": "Historia económica y social general",
+    "tramo": "Primer Tramo",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "252",
+    "nombre": "Administración general",
+    "tramo": "Primer Tramo",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "254",
+    "nombre": "Sociología de las organizaciones",
+    "tramo": "Primer Tramo",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "248",
+    "nombre": "Estadística I",
+    "tramo": "Segundo Tramo",
+    "horas": 6,
+    "correlativas": [
+      "241"
+    ]
+  },
+  {
+    "codigo": "274",
+    "nombre": "Sistemas Administrativos",
+    "tramo": "Segundo Tramo",
+    "horas": 4,
+    "correlativas": [
+      "252"
+    ]
+  },
+  {
+    "codigo": "250",
+    "nombre": "Microeconomía I",
+    "tramo": "Segundo Tramo",
+    "horas": 4,
+    "correlativas": [
+      "242"
+    ]
+  },
+  {
+    "codigo": "247",
+    "nombre": "Teoría contable",
+    "tramo": "Segundo Tramo",
+    "horas": 6,
+    "correlativas": [
+      "252"
+    ]
+  },
+  {
+    "codigo": "249",
+    "nombre": "Historia económica y social argentina",
+    "tramo": "Segundo Tramo",
+    "horas": 4,
+    "correlativas": [
+      "246"
+    ]
+  },
+  {
+    "codigo": "1275",
+    "nombre": "Introducción a la tecnología de la información y las comunicaciones",
+    "tramo": "Segundo Tramo",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "464",
+    "nombre": "Gestión de Costos",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": [
+      "247"
+    ]
+  },
+  {
+    "codigo": "278",
+    "nombre": "Macroeconomía y Política Económica",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "242"
+    ]
+  },
+  {
+    "codigo": "276",
+    "nombre": "Cálculo Financiero",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "241"
+    ]
+  },
+  {
+    "codigo": "279",
+    "nombre": "Administración Financiera",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "276"
+    ]
+  },
+  {
+    "codigo": "1653",
+    "nombre": "Tecnología de los Computadores y Sistemas Operativos",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "1275"
+    ]
+  },
+  {
+    "codigo": "1601",
+    "nombre": "Ingeniería de Software",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": [
+      "1275"
+    ]
+  },
+  {
+    "codigo": "655",
+    "nombre": "Tecnología de Comunicaciones",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": [
+      "1653"
+    ]
+  },
+  {
+    "codigo": "1652",
+    "nombre": "Teoría de los Lenguajes y Algoritmos",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "661"
+    ]
+  },
+  {
+    "codigo": "661",
+    "nombre": "Lógica Simbólica y Fundamentos de la Decisión",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "241"
+    ]
+  },
+  {
+    "codigo": "1603",
+    "nombre": "Derecho Informático I",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": [
+      "1275"
+    ]
+  },
+  {
+    "codigo": "1604",
+    "nombre": "Derecho Informático II",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "1603"
+    ]
+  },
+  {
+    "codigo": "740",
+    "nombre": "Redes Informáticas",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": [
+      "655"
+    ]
+  },
+  {
+    "codigo": "1654",
+    "nombre": "Construcción de Aplicaciones Informáticas",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "1652"
+    ]
+  },
+  {
+    "codigo": "663",
+    "nombre": "Sistemas de Datos",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "661"
+    ]
+  },
+  {
+    "codigo": "662",
+    "nombre": "Seguridad Informática y Principios de Auditoría",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "663"
+    ]
+  },
+  {
+    "codigo": "658",
+    "nombre": "Metodología de los Sistemas de Información",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "1601"
+    ]
+  },
+  {
+    "codigo": "1660",
+    "nombre": "Actuación Profesional del Lic. en Sistemas",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "740",
+      "1654"
+    ]
+  },
+  {
+    "codigo": "1799",
+    "nombre": "Gestión de los Recursos Informáticos",
+    "tramo": "Ciclo Profesional",
+    "horas": 6,
+    "correlativas": [
+      "658",
+      "662"
+    ]
+  },
+  {
+    "codigo": "COD1",
+    "nombre": "Optativa I",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": []
+  },
+  {
+    "codigo": "COD2",
+    "nombre": "Optativa II",
+    "tramo": "Ciclo Profesional",
+    "horas": 4,
+    "correlativas": []
+  }
 ]
