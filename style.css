@@ -83,3 +83,6 @@ main {
 button {
   margin-top: 1rem;
 }
+.materia.resaltada {
+  background-color: #e0e0e0 !important;
+}
