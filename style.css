@@ -1,98 +1,58 @@
-/* Reset básico */
-body, html {
+body {
+  font-family: sans-serif;
   margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
+  background: #f7f7f7;
 }
-
-/* Contenedor principal de los tramos */
-#contenedor-tramos {
+header {
+  background: #fff;
+  padding: 10px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 10px 20px;
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
 }
-
-/* Cada tramo (Primer, Segundo, Ciclo Profesional) */
-.tramo {
-  flex: 1 1 calc(33% - 40px);
-  min-width: 280px;
-  background-color: #f8f9fa;
-  padding: 15px;
-  box-sizing: border-box;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  overflow: visible;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+.logo {
+  height: 50px;
+  margin-right: 15px;
 }
-
-/* Título del tramo */
-.tramo h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.3em;
-  color: #333333;
-  border-bottom: 2px solid #4CAF50;
-  padding-bottom: 5px;
+main {
+  display: flex;
+  padding: 10px;
 }
-
-/* Materias comunes (Primer y Segundo Tramo) */
-.tramo .materia {
-  margin: 5px 0;
-  padding: 6px 10px;
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  color: #222;
-  font-size: 0.95em;
-  cursor: default;
-  user-select: none;
-  transition: background-color 0.3s ease;
-  max-width: 100%;
-  width: fit-content;
-}
-
-/* Hover opcional */
-.tramo .materia:hover {
-  background-color: #e0f2f1;
-}
-
-/* Ajuste especial para ciclo profesional en modo grilla */
-.tramo.ciclo-profesional {
+#materias-container {
+  flex: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
-
-.tramo.ciclo-profesional .materia {
-  flex: 1 1 calc(16.6% - 12px); /* hasta 6 materias por fila */
-  margin: 4px 0;
-  text-align: center;
-  justify-content: center;
+.materia {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 200px;
 }
-
-/* Responsive para pantallas medianas */
-@media (max-width: 900px) {
-  .tramo {
-    flex: 1 1 45%;
-  }
-  .tramo.ciclo-profesional .materia {
-    flex: 1 1 calc(33.3% - 10px); /* 3 por fila */
-  }
+.materia.aprobada {
+  background-color: #a8e6a3;
 }
-
-/* Responsive para pantallas chicas */
-@media (max-width: 600px) {
-  .tramo {
-    flex: 1 1 100%;
-  }
-  .tramo.ciclo-profesional .materia {
-    flex: 1 1 100%; /* 1 por fila */
-  }
+.materia.habilitada {
+  background-color: #d8fcd4;
+}
+.materia.requerida {
+  border: 2px dashed orange;
+}
+#resumen {
+  flex: 1;
+  margin-left: 20px;
+}
+#barra-avance {
+  height: 10px;
+  background: #ccc;
+  margin: 10px 0;
+  width: 100%;
+}
+#barra-avance > div {
+  height: 100%;
+  background: green;
+  width: 0%;
 }
