@@ -2,29 +2,41 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Licenciatura en Sistemas - UBA Económicas</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <img src="logo-uba.png" alt="UBA Económicas" class="logo" />
-    <h1>Licenciatura en Sistemas</h1>
+    <img src="logo-uba.png" alt="Logo UBA" class="logo" />
+    <h1>Licenciatura en Sistemas - UBA ECONÓMICAS</h1>
   </header>
 
   <main>
-    <section id="materias-container"></section>
+    <section id="plan">
+      <div class="tramo" id="primer-tramo">
+        <h2>Primer Tramo</h2>
+        <div class="columnas"></div>
+      </div>
+      <div class="tramo" id="segundo-tramo">
+        <h2>Segundo Tramo</h2>
+        <div class="columnas"></div>
+      </div>
+      <div class="tramo" id="ciclo-profesional">
+        <h2>Ciclo Profesional</h2>
+        <div class="columnas"></div>
+      </div>
+    </section>
+
     <aside id="resumen">
-      <p><strong>Resumen:</strong></p>
-      <p id="estado-avance">0 materias aprobadas — Avance: 0%</p>
-      <p id="estado-promedio">Promedio: 0.00</p>
-      <div id="barra-avance"><div></div></div>
-      <button id="btn-exportar">📄 Exportar resumen en PDF</button>
-      <div id="detalle-aprobadas"></div>
+      <h2>Resumen:</h2>
+      <p id="avance">0 materias aprobadas — Avance: 0%</p>
+      <p id="promedio">Promedio: 0.00</p>
+      <button onclick="exportarResumen()">📄 Exportar resumen en PDF</button>
+      <div id="exportacion"></div>
     </aside>
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
