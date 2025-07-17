@@ -19,17 +19,61 @@ function renderMaterias() {
   materias.forEach((m) => {
     const div = document.createElement("div");
     div.className = "materia";
-    div.textContent = m.nombre;
     div.dataset.codigo = m.codigo;
 
+    // Agregar contenido interno
+    const infoSup = document.createElement("div");
+    infoSup.className = "info-superior";
+
+    // Nota (editable input)
+    const notaBox = document.createElement("div");
+    const notaInput = document.createElement("input");
+    notaInput.className = "nota-input";
+    notaInput.placeholder = "Nota";
+    notaInput.value = aprobadas[m.codigo] || "";
+    notaInput.addEventListener("change", () => {
+      const nota = parseInt(notaInput.value);
+      if (!isNaN(nota) && nota >= 1 && nota <= 10) {
+        aprobadas[m.codigo] = nota;
+      } else {
+        delete aprobadas[m.codigo];
+        notaInput.value = "";
+      }
+      localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
+      renderMaterias();
+      actualizarResumen();
+    });
+    notaBox.appendChild(notaInput);
+
+    // Código
+    const codigoBox = document.createElement("div");
+    codigoBox.textContent = m.codigo;
+
+    // Carga horaria
+    const cargaBox = document.createElement("div");
+    cargaBox.textContent = m.carga_horaria;
+
+    infoSup.appendChild(notaBox);
+    infoSup.appendChild(codigoBox);
+    infoSup.appendChild(cargaBox);
+
+    const nombreDiv = document.createElement("div");
+    nombreDiv.className = "nombre-materia";
+    nombreDiv.textContent = m.nombre;
+
+    div.appendChild(infoSup);
+    div.appendChild(nombreDiv);
+
+    // Colores según estado
     if (aprobadas[m.codigo]) {
       div.classList.add("aprobada");
-      div.textContent += ` (${aprobadas[m.codigo]})`;
     } else if (m.correlativas.every((c) => aprobadas[c])) {
       div.classList.add("habilitada");
+    } else {
+      div.classList.add("bloqueada");
     }
 
-    // Hover: resaltar correlativas
+    // Hover para resaltar correlativas
     div.addEventListener("mouseenter", () => {
       m.correlativas.forEach((codigo) => {
         const correlativa = document.querySelector(`[data-codigo="${codigo}"]`);
@@ -45,27 +89,11 @@ function renderMaterias() {
       });
     });
 
-    // Click: aprobar/desaprobar
-    div.onclick = () => toggleAprobada(m.codigo);
-
+    // Insertar según tramo
     if (m.tramo === 1) primer.appendChild(div);
     else if (m.tramo === 2) segundo.appendChild(div);
     else ciclo.appendChild(div);
   });
-}
-
-function toggleAprobada(codigo) {
-  if (aprobadas[codigo]) {
-    delete aprobadas[codigo];
-  } else {
-    const nota = prompt("Ingrese la nota final (1 a 10):");
-    const num = Number(nota);
-    if (!nota || isNaN(num) || num < 1 || num > 10) return;
-    aprobadas[codigo] = num;
-  }
-  localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
-  renderMaterias();
-  actualizarResumen();
 }
 
 function actualizarResumen() {
@@ -74,7 +102,7 @@ function actualizarResumen() {
   const cantAprobadas = aprobadasList.length;
   const avance = ((cantAprobadas / total) * 100).toFixed(1);
 
-  const notas = aprobadasList.map((codigo) => aprobadas[codigo]);
+  const notas = aprobadasList.map((codigo) => Number(aprobadas[codigo]));
   const promedio =
     notas.length > 0
       ? (notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(2)
