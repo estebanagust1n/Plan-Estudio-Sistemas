@@ -1,90 +1,103 @@
 let materias = [];
-let estado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
+let aprobadas = JSON.parse(localStorage.getItem("aprobadas") || "{}");
 
-fetch('materias.json')
-  .then(res => res.json())
-  .then(data => {
+fetch("materias.json")
+  .then((res) => res.json())
+  .then((data) => {
     materias = data;
     renderMaterias();
     actualizarResumen();
   });
 
 function renderMaterias() {
-  const container = document.getElementById("materias-container");
-  container.innerHTML = "";
+  const primer = document.querySelector("#primer-tramo .columnas");
+  const segundo = document.querySelector("#segundo-tramo .columnas");
+  const ciclo = document.querySelector("#ciclo-profesional .columnas");
 
-  materias.forEach(mat => {
+  primer.innerHTML = segundo.innerHTML = ciclo.innerHTML = "";
+
+  materias.forEach((m) => {
     const div = document.createElement("div");
     div.className = "materia";
-    div.textContent = mat.nombre;
-    div.dataset.codigo = mat.codigo;
+    div.textContent = m.nombre;
+    div.dataset.codigo = m.codigo;
 
-    if (estado[mat.codigo]) {
+    if (aprobadas[m.codigo]) {
       div.classList.add("aprobada");
-      div.dataset.nota = estado[mat.codigo];
-    } else if (puedeCursarse(mat)) {
+      div.textContent += ` (${aprobadas[m.codigo]})`;
+    } else if (m.correlativas.every((c) => aprobadas[c])) {
       div.classList.add("habilitada");
     }
 
-    div.addEventListener("click", () => toggleAprobada(mat, div));
-    div.addEventListener("mouseover", () => resaltarRequisitos(mat.codigo, true));
-    div.addEventListener("mouseout", () => resaltarRequisitos(mat.codigo, false));
+    // Hover: resaltar correlativas
+    div.addEventListener("mouseenter", () => {
+      m.correlativas.forEach((codigo) => {
+        const correlativa = document.querySelector(`[data-codigo="${codigo}"]`);
+        if (correlativa && !aprobadas[codigo]) {
+          correlativa.classList.add("resaltada");
+        }
+      });
+    });
 
-    container.appendChild(div);
+    div.addEventListener("mouseleave", () => {
+      document.querySelectorAll(".resaltada").forEach((el) => {
+        el.classList.remove("resaltada");
+      });
+    });
+
+    // Click: aprobar/desaprobar
+    div.onclick = () => toggleAprobada(m.codigo);
+
+    if (m.tramo === 1) primer.appendChild(div);
+    else if (m.tramo === 2) segundo.appendChild(div);
+    else ciclo.appendChild(div);
   });
 }
 
-function puedeCursarse(materia) {
-  return !estado[materia.codigo] && materia.correlativas.every(c => estado[c]);
-}
-
-function toggleAprobada(materia, div) {
-  if (estado[materia.codigo]) {
-    delete estado[materia.codigo];
-  } else if (puedeCursarse(materia)) {
-    const nota = prompt("Ingrese la nota final de la materia:");
-    if (nota) estado[materia.codigo] = parseFloat(nota);
+function toggleAprobada(codigo) {
+  if (aprobadas[codigo]) {
+    delete aprobadas[codigo];
+  } else {
+    const nota = prompt("Ingrese la nota final (1 a 10):");
+    const num = Number(nota);
+    if (!nota || isNaN(num) || num < 1 || num > 10) return;
+    aprobadas[codigo] = num;
   }
-  localStorage.setItem('estadoMaterias', JSON.stringify(estado));
+  localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
   renderMaterias();
   actualizarResumen();
 }
 
 function actualizarResumen() {
-  const aprobadas = Object.keys(estado);
-  const porcentaje = ((aprobadas.length / materias.length) * 100).toFixed(1);
-  const promedio = aprobadas.length
-    ? (Object.values(estado).reduce((a,b)=>a+b,0) / aprobadas.length).toFixed(2)
-    : "0.00";
+  const total = materias.length;
+  const aprobadasList = Object.keys(aprobadas);
+  const cantAprobadas = aprobadasList.length;
+  const avance = ((cantAprobadas / total) * 100).toFixed(1);
 
-  document.getElementById("estado-avance").textContent =
-    `${aprobadas.length} materias aprobadas — Avance: ${porcentaje}%`;
-  document.getElementById("estado-promedio").textContent =
-    `Promedio: ${promedio}`;
+  const notas = aprobadasList.map((codigo) => aprobadas[codigo]);
+  const promedio =
+    notas.length > 0
+      ? (notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(2)
+      : "0.00";
 
-  document.querySelector("#barra-avance > div").style.width = `${porcentaje}%`;
+  document.getElementById("avance").textContent = `${cantAprobadas} materias aprobadas — Avance: ${avance}%`;
+  document.getElementById("promedio").textContent = `Promedio: ${promedio}`;
 
-  document.getElementById("detalle-aprobadas").innerHTML =
-    aprobadas.map(c => {
-      const m = materias.find(m => m.codigo === c);
-      return `<p>${m.nombre}: ${estado[c]}</p>`;
-    }).join("");
-}
-
-function resaltarRequisitos(codigo, activar) {
-  materias.forEach(mat => {
-    if (mat.correlativas.includes(codigo)) {
-      const div = document.querySelector(`.materia[data-codigo="${mat.codigo}"]`);
-      if (div) div.classList.toggle("requerida", activar);
-    }
+  const exportacion = document.getElementById("exportacion");
+  exportacion.innerHTML = "";
+  aprobadasList.forEach((codigo) => {
+    const materia = materias.find((m) => m.codigo === codigo);
+    const div = document.createElement("div");
+    div.textContent = `${materia.nombre}: ${aprobadas[codigo]}`;
+    exportacion.appendChild(div);
   });
 }
 
-document.getElementById("btn-exportar").addEventListener("click", () => {
-  html2canvas(document.body).then(canvas => {
-    const link = document.createElement('a');
-    link.download = 'resumen.png';
+function exportarResumen() {
+  html2canvas(document.body).then((canvas) => {
+    const link = document.createElement("a");
+    link.download = "resumen.png";
     link.href = canvas.toDataURL();
     link.click();
   });
-});
+}
