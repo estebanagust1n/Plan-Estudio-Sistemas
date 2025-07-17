@@ -3,29 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Plan de Estudios - Lic. en Sistemas (UBA)</title>
+  <title>Plan de Estudios - Licenciatura en Sistemas</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="logo-uba.png" />
 </head>
 <body>
-  <header>
-    <img src="logo-uba.png" alt="UBA Logo" class="logo"/>
-    <h1>Plan de Estudios - Lic. en Sistemas (UBA)</h1>
-  </header>
+  <h1 style="text-align:center;">Plan de Estudios - Licenciatura en Sistemas (UBA)</h1>
 
-  <main>
-    <section id="resumen-panel">
-      <h2>Resumen</h2>
-      <p><strong>Materias aprobadas:</strong> <span id="aprobadas"></span></p>
-      <p><strong>Promedio:</strong> <span id="promedio"></span></p>
-      <p><strong>Porcentaje completado:</strong> <span id="progreso"></span></p>
-      <div id="materias-aprobadas-lista"></div>
-      <button id="exportar-pdf">📄 Exportar a PDF</button>
-    </section>
+  <div id="contenedor-tramos">
 
-    <section id="plan-estudios"></section>
-  </main>
+    <!-- Primer tramo -->
+    <div class="tramo">
+      <h2>Primer Tramo</h2>
+      <div class="materia">Análisis Matemático I</div>
+      <div class="materia">Álgebra</div>
+      <div class="materia">Introducción a la Informática</div>
+      <div class="materia">Sistemas y Organizaciones</div>
+      <div class="materia">Matemática Discreta</div>
+      <div class="materia">Contabilidad</div>
+      <div class="materia">Economía</div>
+    </div>
 
-  <script src="script.js"></script>
+    <!-- Segundo tramo -->
+    <div class="tramo">
+      <h2>Segundo Tramo</h2>
+      <div class="materia">Análisis Matemático II</div>
+      <div class="materia">Probabilidades y Estadística</div>
+      <div class="materia">Análisis de Sistemas</div>
+      <div class="materia">Tecnología de la Información</div>
+      <div class="materia">Organización Empresarial</div>
+      <div class="materia">Derecho</div>
+      <div class="materia">Inglés</div>
+    </div>
+
+    <!-- Ciclo profesional con clase especial para grilla -->
+    <div class="tramo ciclo-profesional">
+      <h2>Ciclo Profesional</h2>
+      <div class="materia">Teoría de Control</div>
+      <div class="materia">Investigación Operativa</div>
+      <div class="materia">Sistemas de Datos</div>
+      <div class="materia">Sistemas de Gestión</div>
+      <div class="materia">Redes de Información</div>
+      <div class="materia">Ingeniería de Software</div>
+      <div class="materia">Modelos y Simulación</div>
+      <div class="materia">Administración de Recursos</div>
+      <div class="materia">Seguridad Informática</div>
+      <div class="materia">Trabajo Profesional</div>
+      <div class="materia">Auditoría de Sistemas</div>
+      <div class="materia">Proyecto Final</div>
+    </div>
+
+  </div>
 </body>
 </html>
