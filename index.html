@@ -1,30 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Licenciatura en Sistemas - UBA</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
   <header>
-    <img src="logo-uba.png" alt="Logo UBA" />
-    <h1>Licenciatura en Sistemas</h1>
+    <img src="logo-uba.png" alt="Logo UBA" class="logo-uba" />
+    <h1>Licenciatura en Sistemas <span class="facultad">- UBA ECONÓMICAS</span></h1>
   </header>
 
-  <main class="tramos-container">
-    <section id="primer-tramo" class="tramo">
-      <h2>Primer Tramo</h2>
-      <div class="columnas"></div>
-    </section>
-    <section id="segundo-tramo" class="tramo">
-      <h2>Segundo Tramo</h2>
-      <div class="columnas"></div>
-    </section>
-    <section id="ciclo-profesional" class="tramo">
-      <h2>Ciclo Profesional</h2>
-      <div class="columnas"></div>
-    </section>
-  </main>
+  <div class="contenido">
+    <main class="tramos-container">
+      <section id="primer-tramo" class="tramo">
+        <h2>Primer Tramo</h2>
+        <div class="columnas"></div>
+      </section>
+      <section id="segundo-tramo" class="tramo">
+        <h2>Segundo Tramo</h2>
+        <div class="columnas"></div>
+      </section>
+      <section id="ciclo-profesional" class="tramo">
+        <h2>Ciclo Profesional</h2>
+        <div class="columnas"></div>
+      </section>
+    </main>
 
-  <aside id="resumen">
-    <p id="avance">0 materias aprobadas — Avance: 0%</p>
-    <p id="promedio">Promedio: 0.00</p>
-    <button onclick="exportarResumen()">📤 Exportar resumen en PDF</button>
-    <div id="exportacion"></div>
-  </aside>
+    <aside id="resumen">
+      <h2>Resumen:</h2>
+      <p id="avance">0 materias aprobadas — Avance: 0%</p>
+      <p id="promedio">Promedio: 0.00</p>
+      <button class="boton-exportar" onclick="exportarResumen()">📤 Exportar resumen en PDF</button>
+      <div id="exportacion"></div>
+    </aside>
+  </div>
 
   <script src="script.js"></script>
 </body>
+</html>
