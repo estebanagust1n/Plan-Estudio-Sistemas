@@ -7,44 +7,38 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <div class="titulo-con-logo">
-    <img src="uba-logo.png" alt="UBA" class="logo-uba" />
+  <header>
+    <img src="logo.png" alt="Logo UBA" class="logo" />
     <h1>Licenciatura en Sistemas</h1>
-  </div>
+  </header>
 
-  <div class="main-container">
-    <!-- Malla de materias -->
-    <div class="contenedor-malla">
-      <div class="columna">
+  <main>
+    <section class="malla">
+      <div class="tramo">
         <h2>Primer Tramo</h2>
-        <div id="tramo1" class="malla-container"></div>
+        <div id="primer-tramo" class="columnas"></div>
       </div>
-
-      <div class="columna">
+      <div class="tramo">
         <h2>Segundo Tramo</h2>
-        <div id="tramo2" class="malla-container"></div>
+        <div id="segundo-tramo" class="columnas"></div>
       </div>
-
-      <div class="columna-grande">
+      <div class="tramo">
         <h2>Ciclo Profesional</h2>
-        <div id="profesional" class="malla-profesional"></div>
+        <div id="ciclo-profesional" class="columnas ciclo"></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Panel lateral -->
-    <div id="resumen" class="resumen">
-      <h2>Resumen</h2>
-      <p id="stats-text">0 materias aprobadas</p>
-      <p id="promedio-text">Promedio: 0.00</p>
-      <div class="barra">
-        <div id="barra-progreso"></div>
+    <aside>
+      <h3>Resumen</h3>
+      <p><span id="aprobadas">0</span> materias aprobadas</p>
+      <p>Promedio: <span id="promedio">0.00</span></p>
+      <div class="barra-container">
+        <div class="barra" id="barra-progreso"></div>
       </div>
-      <button onclick="exportarPDF()">📄 Exportar resumen en PDF</button>
-    </div>
-  </div>
+      <button id="exportar">📄 Exportar resumen en PDF</button>
+    </aside>
+  </main>
 
-  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
