@@ -14,14 +14,21 @@ html, body {
 }
 
 /* Contenedor principal */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Malla completa */
 .contenedor-malla {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr); /* 5 columnas de materias */
   gap: 10px;
-  padding: 10px 20px;
-  height: calc(100vh - 100px); /* deja espacio para resumen */
-  box-sizing: border-box;
-  align-items: start;
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* Columnas */
@@ -39,36 +46,53 @@ html, body {
   margin-bottom: 8px;
 }
 
-/* Materias organizadas en grillas internas */
-#tramo1, #tramo2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+/* Contenedores internos de materias */
+.malla-container {
+  display: flex;
+  flex-direction: column;
   gap: 6px;
   width: 100%;
 }
 
-#profesional {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Ajustamos a 3 columnas para balancear */
-  gap: 6px;
-  width: 100%;
-}
-
-/* Materia individual */
+/* Tarjeta de materia */
 .materia {
   background-color: #eeeeee;
   border: 1px solid #e66900;
   border-radius: 6px;
-  text-align: center;
-  padding: 4px;
   font-size: 10px;
+  padding: 4px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.materia input {
-  margin-top: 2px;
-  width: 40px;
-  font-size: 10px;
+/* Encabezado de la materia (nota, código, horas) */
+.materia-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.nota-final {
+  background: #ddd;
+  padding: 2px 4px;
+  border-radius: 4px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.codigo, .horas {
+  font-size: 9px;
+  color: #555;
+}
+
+/* Nombre de materia */
+.nombre {
+  text-align: center;
+  font-weight: bold;
 }
 
 /* Estados */
@@ -86,26 +110,37 @@ html, body {
   cursor: not-allowed;
 }
 
-/* Pie de resumen */
+/* Panel lateral: Resumen */
 .resumen {
-  padding: 8px 12px;
-  text-align: center;
+  width: 220px;
+  padding: 10px;
+  background: #fff;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   font-size: 11px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border-top: 1px solid #ccc;
 }
 
+.resumen h2 {
+  font-size: 14px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+#stats-text, #promedio-text {
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+/* Barra de progreso */
 .barra {
   background-color: #ccc;
   border-radius: 10px;
   overflow: hidden;
   height: 12px;
   margin: 6px auto;
-  max-width: 60%;
+  width: 90%;
 }
 
 #barra-progreso {
@@ -115,9 +150,11 @@ html, body {
   transition: width 0.4s ease;
 }
 
+/* Botón exportar */
 button {
-  margin-top: 6px;
+  margin-top: 10px;
   font-size: 11px;
-  padding: 4px 8px;
+  padding: 6px 10px;
   cursor: pointer;
+  align-self: center;
 }
