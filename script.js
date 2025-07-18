@@ -1,85 +1,96 @@
-let materias = [], aprobadas = JSON.parse(localStorage.getItem("aprobadas")||"{}");
+let materias = [];
 
-fetch("materias.json")
-  .then(r=>r.json()).then(d=>{
-    materias=d;
-    init();
-  });
-
-function init(){
-  aplicarColumnas();
-  renderMaterias();
+async function cargarMaterias() {
+  const response = await fetch("materias.json");
+  materias = await response.json();
+  renderizarMaterias();
   actualizarResumen();
 }
 
-function aplicarColumnas(){
-  document.querySelectorAll(".columnas").forEach(c=>{
-    let cols=+c.dataset.cols;
-    c.style.setProperty("--cols", cols);
-  });
-}
-
-function renderMaterias(){
-  const conts = {
-    1: document.querySelector("#primer-tramo .columnas"),
-    2: document.querySelector("#segundo-tramo .columnas"),
-    3: document.querySelector("#ciclo-profesional .columnas")
+function renderizarMaterias() {
+  const tramos = {
+    "Primer tramo": document.querySelector("#primer-tramo .columnas"),
+    "Segundo tramo": document.querySelector("#segundo-tramo .columnas"),
+    "Ciclo Profesional": document.querySelector("#ciclo-profesional .columnas")
   };
-  Object.values(conts).forEach(el=>el.innerHTML="");
 
-  materias.forEach(m=>{
-    const d=document.createElement("div"), inf=document.createElement("div"),
-      inp=document.createElement("input"), cod=document.createElement("div"),
-      cyc=document.createElement("div"), nom=document.createElement("div");
-    d.className="materia";
-    inf.className="info-superior";
-    inp.className="nota-input"; inp.type="number"; inp.min=1; inp.max=10;
-    inp.value=aprobadas[m.codigo]||"";
-    cod.textContent=m.codigo; cyc.textContent=m.carga_horaria;
-    nom.className="nombre-materia"; nom.textContent=m.nombre;
+  Object.values(tramos).forEach(col => col.innerHTML = "");
 
-    inf.append(inp,cod,cyc); d.append(inf,nom);
-    conts[m.tramo].append(d);
+  const columnasProfesional = [[], [], []];
 
-    const aprob = !!aprobadas[m.codigo];
-    const habil = m.correlativas.every(c=>aprobadas[c]);
+  materias.forEach((materia, index) => {
+    const div = document.createElement("div");
+    div.className = "materia";
+    div.dataset.codigo = materia.codigo;
 
-    if(aprob){d.classList.add("aprobada");}
-    else if(habil){d.classList.add("habilitada");}
-    else {d.classList.add("bloqueada"); d.classList.add("disabled");}
+    const aprobada = materia.aprobada;
+    const nota = materia.nota || "";
 
-    if(!aprob && habil){
-      d.addEventListener("click",()=> inp.focus());
+    if (aprobada) div.classList.add("aprobada");
+    else if (materia.requisitos.length === 0 || materia.requisitos.every(codigo => obtenerMateria(codigo)?.aprobada))
+      div.classList.add("habilitada");
+    else div.classList.add("no-habilitada");
+
+    div.innerHTML = `
+      <div class="nota">${aprobada ? `Nota: ${nota}` : ""}</div>
+      <strong>${materia.nombre}</strong>
+      <span>${materia.codigo} - ${materia.carga_horaria}</span>
+    `;
+
+    div.onclick = () => {
+      if (!div.classList.contains("habilitada") && !div.classList.contains("aprobada")) return;
+
+      if (!div.classList.contains("aprobada")) {
+        const nota = prompt("Ingresá la nota (1 a 10):");
+        if (nota && !isNaN(nota) && nota >= 1 && nota <= 10) {
+          materia.aprobada = true;
+          materia.nota = nota;
+        }
+      } else {
+        materia.aprobada = false;
+        materia.nota = null;
+      }
+
+      renderizarMaterias();
+      actualizarResumen();
+    };
+
+    if (materia.tramo === "Ciclo Profesional") {
+      const colIndex = Math.floor(columnasProfesional.flat().length / 6);
+      if (colIndex < 3) columnasProfesional[colIndex].push(div);
+    } else {
+      tramos[materia.tramo].appendChild(div);
     }
+  });
 
-    inp.addEventListener("change", ()=>{
-      const v=parseInt(inp.value);
-      if(v>=1 && v<=10) {
-        aprobadas[m.codigo]=v;
-        d.classList.replace("habilitada","aprobada");
-      } else { delete aprobadas[m.codigo]; d.classList.remove("aprobada"); }
-      localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
-      actualizarResumen(); renderMaterias();
-    });
+  columnasProfesional.forEach((grupo, i) => {
+    const contenedor = document.createElement("div");
+    contenedor.style.display = "flex";
+    contenedor.style.flexDirection = "column";
+    grupo.forEach(m => contenedor.appendChild(m));
+    tramos["Ciclo Profesional"].appendChild(contenedor);
   });
 }
 
-function actualizarResumen(){
-  const ap = Object.keys(aprobadas);
-  const prom = ap.length ? (ap.reduce((sum,c)=>sum+aprobadas[c],0)/ap.length).toFixed(2):"0.00";
-  const avance = ((ap.length/materias.length)*100).toFixed(1);
-  document.getElementById("promedio").textContent=`Promedio: ${prom}`;
-  document.getElementById("avance").textContent=`${ap.length} materias aprobadas — Avance: ${avance}%`;
-  const ex = document.getElementById("exportacion"); ex.innerHTML="";
-  ap.forEach(c=>{
-    const m=materias.find(x=>x.codigo===c);
-    ex.innerHTML+=`<div>${m.nombre}: ${aprobadas[c]}</div>`;
-  });
+function obtenerMateria(codigo) {
+  return materias.find(m => m.codigo === codigo);
 }
 
-function exportarResumen(){
-  html2canvas(document.body).then(c=> {
-    const a=document.createElement("a");
-    a.download="resumen.png"; a.href=c.toDataURL(); a.click();
-  });
+function actualizarResumen() {
+  const total = materias.length;
+  const aprobadas = materias.filter(m => m.aprobada).length;
+  const faltan = total - aprobadas;
+  const promedio = materias.filter(m => m.aprobada).reduce((s, m) => s + Number(m.nota), 0) / (aprobadas || 1);
+  const porcentaje = Math.round((aprobadas / total) * 100);
+
+  document.getElementById("resumen-aprobadas").textContent = aprobadas;
+  document.getElementById("resumen-faltan").textContent = faltan;
+  document.getElementById("resumen-promedio").textContent = promedio.toFixed(2);
+  document.getElementById("resumen-porcentaje").textContent = porcentaje + "%";
 }
+
+function exportarPDF() {
+  window.print();
+}
+
+document.addEventListener("DOMContentLoaded", cargarMaterias);
