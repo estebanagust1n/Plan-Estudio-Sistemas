@@ -12,30 +12,28 @@ html, body {
   font-size: 11px;
 }
 
-/* Layout principal */
 .main-container {
   display: flex;
   flex-direction: row;
   height: 100vh;
 }
 
-/* Malla */
 .contenedor-malla {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 1fr 3fr;
   gap: 10px;
   padding: 10px;
   flex: 1;
   overflow-y: auto;
 }
 
-.columna {
+.columna, .columna-grande {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.columna h2 {
+.columna h2, .columna-grande h2 {
   font-size: 14px;
   text-align: center;
   color: #e66900;
@@ -50,7 +48,15 @@ html, body {
   width: 100%;
 }
 
-/* Tarjeta */
+/* Ciclo profesional en 3 columnas */
+.malla-profesional {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+/* Materias */
 .materia {
   background-color: #eeeeee;
   border: 1px solid #e66900;
@@ -95,7 +101,6 @@ html, body {
   font-size: 10px;
 }
 
-/* Estados */
 .materia.aprobada {
   background-color: #b9f6ca;
 }
