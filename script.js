@@ -1,96 +1,108 @@
 let materias = [];
+let materiasAprobadas = {};
 
-async function cargarMaterias() {
-  const response = await fetch("materias.json");
-  materias = await response.json();
-  renderizarMaterias();
-  actualizarResumen();
-}
+fetch("materias.json")
+  .then((res) => res.json())
+  .then((data) => {
+    materias = data;
+    renderizarMaterias();
+  });
 
 function renderizarMaterias() {
   const tramos = {
     "Primer tramo": document.querySelector("#primer-tramo .columnas"),
     "Segundo tramo": document.querySelector("#segundo-tramo .columnas"),
-    "Ciclo Profesional": document.querySelector("#ciclo-profesional .columnas")
+    "Ciclo Profesional": document.querySelector("#ciclo-profesional .columnas"),
   };
 
-  Object.values(tramos).forEach(col => col.innerHTML = "");
+  Object.entries(tramos).forEach(([tramo, contenedor]) => {
+    const materiasTramo = materias.filter((m) => m.tramo === tramo);
+    const columnas = parseInt(contenedor.getAttribute("data-cols")) || 1;
+    const materiasPorColumna = Math.ceil(materiasTramo.length / columnas);
 
-  const columnasProfesional = [[], [], []];
-
-  materias.forEach((materia, index) => {
-    const div = document.createElement("div");
-    div.className = "materia";
-    div.dataset.codigo = materia.codigo;
-
-    const aprobada = materia.aprobada;
-    const nota = materia.nota || "";
-
-    if (aprobada) div.classList.add("aprobada");
-    else if (materia.requisitos.length === 0 || materia.requisitos.every(codigo => obtenerMateria(codigo)?.aprobada))
-      div.classList.add("habilitada");
-    else div.classList.add("no-habilitada");
-
-    div.innerHTML = `
-      <div class="nota">${aprobada ? `Nota: ${nota}` : ""}</div>
-      <strong>${materia.nombre}</strong>
-      <span>${materia.codigo} - ${materia.carga_horaria}</span>
-    `;
-
-    div.onclick = () => {
-      if (!div.classList.contains("habilitada") && !div.classList.contains("aprobada")) return;
-
-      if (!div.classList.contains("aprobada")) {
-        const nota = prompt("Ingresá la nota (1 a 10):");
-        if (nota && !isNaN(nota) && nota >= 1 && nota <= 10) {
-          materia.aprobada = true;
-          materia.nota = nota;
-        }
-      } else {
-        materia.aprobada = false;
-        materia.nota = null;
-      }
-
-      renderizarMaterias();
-      actualizarResumen();
-    };
-
-    if (materia.tramo === "Ciclo Profesional") {
-      const colIndex = Math.floor(columnasProfesional.flat().length / 6);
-      if (colIndex < 3) columnasProfesional[colIndex].push(div);
-    } else {
-      tramos[materia.tramo].appendChild(div);
+    for (let i = 0; i < columnas; i++) {
+      const col = document.createElement("div");
+      col.classList.add("columna");
+      contenedor.appendChild(col);
     }
+
+    materiasTramo.forEach((materia, index) => {
+      const card = crearCardMateria(materia);
+      const columna = contenedor.children[Math.floor(index / materiasPorColumna)];
+      columna.appendChild(card);
+    });
   });
 
-  columnasProfesional.forEach((grupo, i) => {
-    const contenedor = document.createElement("div");
-    contenedor.style.display = "flex";
-    contenedor.style.flexDirection = "column";
-    grupo.forEach(m => contenedor.appendChild(m));
-    tramos["Ciclo Profesional"].appendChild(contenedor);
-  });
+  actualizarResumen();
 }
 
-function obtenerMateria(codigo) {
-  return materias.find(m => m.codigo === codigo);
+function crearCardMateria(materia) {
+  const div = document.createElement("div");
+  div.className = "materia bloqueada";
+  div.dataset.codigo = materia.codigo;
+
+  const notaInput = document.createElement("input");
+  notaInput.className = "nota";
+  notaInput.type = "text";
+  notaInput.maxLength = 2;
+
+  const nombre = document.createElement("div");
+  nombre.textContent = materia.nombre;
+
+  const codigo = document.createElement("div");
+  codigo.style.fontSize = "12px";
+  codigo.textContent = materia.codigo;
+
+  div.appendChild(notaInput);
+  div.appendChild(codigo);
+  div.appendChild(nombre);
+
+  div.addEventListener("click", () => {
+    if (div.classList.contains("bloqueada")) return;
+
+    const aprobada = div.classList.toggle("aprobada");
+
+    if (aprobada) {
+      notaInput.style.display = "inline-block";
+      notaInput.focus();
+    } else {
+      notaInput.value = "";
+      notaInput.style.display = "none";
+    }
+
+    materiasAprobadas[materia.codigo] = aprobada;
+    actualizarHabilitadas();
+    actualizarResumen();
+  });
+
+  return div;
+}
+
+function actualizarHabilitadas() {
+  document.querySelectorAll(".materia").forEach((el) => {
+    const codigo = el.dataset.codigo;
+    const materia = materias.find((m) => m.codigo === codigo);
+    const requisitos = materia.requisitos || [];
+
+    if (materiasAprobadas[codigo]) {
+      el.classList.remove("bloqueada");
+      el.classList.add("aprobada");
+    } else if (requisitos.every((r) => materiasAprobadas[r])) {
+      el.classList.remove("bloqueada");
+      el.classList.remove("aprobada");
+      el.classList.add("habilitada");
+    } else {
+      el.classList.remove("aprobada", "habilitada");
+      el.classList.add("bloqueada");
+    }
+  });
 }
 
 function actualizarResumen() {
+  const aprobadas = Object.values(materiasAprobadas).filter(Boolean).length;
   const total = materias.length;
-  const aprobadas = materias.filter(m => m.aprobada).length;
-  const faltan = total - aprobadas;
-  const promedio = materias.filter(m => m.aprobada).reduce((s, m) => s + Number(m.nota), 0) / (aprobadas || 1);
   const porcentaje = Math.round((aprobadas / total) * 100);
-
-  document.getElementById("resumen-aprobadas").textContent = aprobadas;
-  document.getElementById("resumen-faltan").textContent = faltan;
-  document.getElementById("resumen-promedio").textContent = promedio.toFixed(2);
-  document.getElementById("resumen-porcentaje").textContent = porcentaje + "%";
+  document.getElementById(
+    "info-materias"
+  ).textContent = `Aprobadas: ${aprobadas}/${total} – ${porcentaje}% completado`;
 }
-
-function exportarPDF() {
-  window.print();
-}
-
-document.addEventListener("DOMContentLoaded", cargarMaterias);
