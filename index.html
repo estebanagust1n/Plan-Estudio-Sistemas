@@ -9,38 +9,34 @@
 <body>
   <h1>Licenciatura en Sistemas</h1>
 
-  <div class="main-container">
-    <!-- Malla de materias -->
-    <div class="contenedor-malla">
-      <div class="columna">
-        <h2>Primer Tramo</h2>
-        <div id="tramo1" class="malla-container"></div>
-      </div>
-
-      <div class="columna">
-        <h2>Segundo Tramo</h2>
-        <div id="tramo2" class="malla-container"></div>
-      </div>
-
-      <div class="columna-grande">
-        <h2>Ciclo Profesional</h2>
-        <div id="profesional" class="malla-profesional"></div>
-      </div>
+  <!-- Malla de materias -->
+  <div class="contenedor-malla">
+    <div class="columna">
+      <h2>Primer Tramo</h2>
+      <div id="tramo1" class="malla-container"></div>
     </div>
 
-    <!-- Panel lateral -->
-    <div id="resumen" class="resumen">
-      <h2>Resumen</h2>
-      <p id="stats-text">0 materias aprobadas</p>
-      <p id="promedio-text">Promedio: 0.00</p>
-      <div class="barra">
-        <div id="barra-progreso"></div>
-      </div>
-      <button onclick="exportarPDF()">📄 Exportar resumen en PDF</button>
+    <div class="columna">
+      <h2>Segundo Tramo</h2>
+      <div id="tramo2" class="malla-container"></div>
+    </div>
+
+    <div class="columna">
+      <h2>Ciclo Profesional</h2>
+      <div id="profesional" class="malla-container"></div>
     </div>
   </div>
 
-  <!-- Script -->
+  <!-- Resumen y exportar -->
+  <div id="resumen" class="resumen">
+    <div id="stats-text"></div>
+    <div class="barra">
+      <div id="barra-progreso"></div>
+    </div>
+    <button onclick="exportarPDF()">📄 Exportar resumen en PDF</button>
+  </div>
+
+  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
