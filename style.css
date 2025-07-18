@@ -1,168 +1,157 @@
-/* Reset básico */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-body {
-  font-family: "Segoe UI", sans-serif;
-  display: flex;
+html, body {
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #f0f2f5;
+  font-family: sans-serif;
+  font-size: 11px;
 }
 
-/* CABECERA CON LOGO Y TÍTULO */
-header {
-  position: fixed;
-  top: 10px;
-  left: 20px;
+.main-container {
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.contenedor-malla {
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr;
   gap: 10px;
-  z-index: 10;
-}
-
-.logo-uba {
-  height: 40px;
-}
-
-h1 {
-  font-size: 1.5rem;
-  color: #003366;
-}
-
-/* CONTENEDOR PRINCIPAL */
-main.tramos-container {
-  flex: 1;
-  padding: 70px 20px 20px 20px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-/* TÍTULOS DE CADA TRAMO */
-.tramo h2 {
-  color: #003366;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-}
-
-/* CONTENEDOR DE COLUMNAS */
-.columnas {
-  display: flex;
-  gap: 30px;
-  flex-wrap: nowrap;
-}
-
-/* COLUMNA DE HASTA 6 MATERIAS */
-.columna {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* TARJETA DE MATERIA */
-.materia {
-  background-color: white;
-  width: 180px;
-  height: 110px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  position: relative;
   padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.columna, .columna-grande {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+}
+
+.columna h2, .columna-grande h2 {
+  font-size: 14px;
+  text-align: center;
+  color: #e66900;
+  border-bottom: 1px solid #e66900;
+  margin-bottom: 8px;
+}
+
+.malla-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Ciclo profesional en 3 columnas */
+.malla-profesional {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+/* Materias */
+.materia {
+  background-color: #eeeeee;
+  border: 1px solid #e66900;
+  border-radius: 6px;
+  font-size: 10px;
+  padding: 4px;
   cursor: pointer;
-  transition: transform 0.1s ease, border 0.1s ease;
-  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* ESTILO HOVER */
-.materia:hover {
-  transform: scale(1.02);
-  border: 2px solid #005599;
+.materia-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
-/* CAJITA DE NOTA */
-.materia .nota {
-  position: absolute;
-  top: 6px;
-  left: 8px;
-  background-color: #003366;
-  color: white;
-  font-size: 13px;
-  padding: 3px 6px;
+.nota-final {
+  background: #ddd;
+  padding: 2px 4px;
   border-radius: 4px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.codigo, .horas {
+  font-size: 9px;
+  color: #555;
+}
+
+.nombre {
+  text-align: center;
   font-weight: bold;
 }
 
-/* CÓDIGO Y CARGA HORARIA */
-.materia .info {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 11px;
-  color: #666;
-  text-align: right;
+.materia input {
+  margin-top: 4px;
+  width: 40px;
+  font-size: 10px;
 }
 
-/* NOMBRE CENTRADO */
-.materia .nombre {
-  font-size: 14px;
-  text-align: center;
-  color: #222;
-  font-weight: 500;
-  margin-top: 20px;
-  padding: 0 8px;
+.materia.aprobada {
+  background-color: #b9f6ca;
 }
 
-/* ESTADOS DE LAS MATERIAS */
-.aprobada {
-  background-color: #d0f0c0;
+.materia.habilitada {
+  background-color: #fff59d;
 }
 
-.habilitada {
-  background-color: #fff9db;
-}
-
-.bloqueada {
-  background-color: #e0e0e0;
-  color: #999;
+.materia.bloqueada {
+  background-color: #eeeeee;
+  color: #aaa;
   cursor: not-allowed;
-  pointer-events: none;
 }
 
-/* PANEL LATERAL DERECHO */
-#resumen {
-  width: 280px;
-  background-color: #ffffff;
+/* Panel lateral */
+.resumen {
+  width: 220px;
+  padding: 10px;
+  background: #fff;
   border-left: 1px solid #ccc;
-  padding: 20px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  font-size: 11px;
 }
 
-#resumen p {
+.resumen h2 {
   font-size: 14px;
-  color: #333;
+  margin-bottom: 6px;
+  text-align: center;
 }
 
-#resumen button {
-  background-color: #003366;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
+.barra {
+  background-color: #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 12px;
+  margin: 6px auto;
+  width: 90%;
+}
+
+#barra-progreso {
+  background-color: #4caf50;
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+button {
+  margin-top: 10px;
+  font-size: 11px;
+  padding: 6px 10px;
   cursor: pointer;
-  font-size: 14px;
-}
-
-#resumen button:hover {
-  background-color: #005599;
+  align-self: center;
 }
