@@ -155,3 +155,39 @@ button {
   cursor: pointer;
   align-self: center;
 }
+.fila-superior {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+.celda {
+  flex: 1;
+  padding: 2px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 10px;
+  border-right: 1px solid #ccc;
+}
+
+.celda:last-child {
+  border-right: none;
+}
+
+.celda.nota {
+  background-color: #ffffff;
+}
+
+.celda.codigo {
+  background-color: #ffa64d;
+}
+
+.celda.carga {
+  background-color: #ffe082;
+}
+
+.nombre-materia {
+  padding: 4px 2px;
+  font-weight: normal;
+  font-size: 10px;
+}
