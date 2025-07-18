@@ -70,11 +70,8 @@ fetch('materias.json')
         if (materia.tramo === "Primer tramo") tramo1.appendChild(div);
         else if (materia.tramo === "Segundo tramo") tramo2.appendChild(div);
         else {
-          const i = index % 3;
-          if (i === 0) profesional1.appendChild(div);
-          else if (i === 1) profesional2.appendChild(div);
-          else profesional3.appendChild(div);
-        }
+  document.getElementById('profesional').appendChild(div);
+}
 
         if (aprobada && nota) materiasConNotas.push(parseFloat(nota));
       });
