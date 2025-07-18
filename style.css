@@ -208,4 +208,5 @@ button:hover {
 
 .logo-uba {
   height: 40px;
+  object-fit: contain;
 }
