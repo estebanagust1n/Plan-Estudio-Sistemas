@@ -1,122 +1,120 @@
 let materias = [];
-let aprobadas = [];
+let aprobadas = 0;
+let sumaNotas = 0;
 
-fetch("materias.json")
-  .then(res => res.json())
-  .then(data => {
-    materias = data;
-    renderMaterias();
-  });
+async function cargarMaterias() {
+  const res = await fetch("materias.json");
+  materias = await res.json();
+  renderizarMaterias();
+}
 
-function renderMaterias() {
-  const tramos = {
-    "Primer tramo": document.querySelector("#primer-tramo .columnas"),
-    "Segundo tramo": document.querySelector("#segundo-tramo .columnas"),
-    "Ciclo Profesional": document.querySelector("#ciclo-profesional .columnas")
-  };
-
-  Object.values(tramos).forEach(div => div.innerHTML = "");
-
+function renderizarMaterias() {
   const porTramo = {
-    "Primer tramo": [],
-    "Segundo tramo": [],
-    "Ciclo Profesional": []
+    1: document.getElementById("columnas-primer"),
+    2: document.getElementById("columnas-segundo"),
+    3: document.getElementById("columnas-ciclo")
   };
 
-  materias.forEach(m => porTramo[m.tramo].push(m));
-
-  for (let tramo in porTramo) {
-    const container = tramos[tramo];
-    const grupos = chunkArray(porTramo[tramo], 6);
-
-    grupos.forEach(grupo => {
-      const col = document.createElement("div");
-      col.classList.add("columna");
-
-      grupo.forEach(materia => {
-        const card = document.createElement("div");
-        card.classList.add("materia");
-
-        const estaAprobada = aprobadas.some(a => a.codigo === materia.codigo);
-        const habilitada = checkHabilitada(materia);
-
-        if (estaAprobada) card.classList.add("aprobada");
-        else if (!habilitada) card.classList.add("bloqueada");
-        else card.classList.add("habilitada");
-
-        const nota = document.createElement("div");
-        nota.className = "nota";
-        nota.textContent = estaAprobada
-          ? aprobadas.find(a => a.codigo === materia.codigo).nota
-          : "";
-
-        const nombre = document.createElement("div");
-        nombre.textContent = materia.nombre;
-
-        const info = document.createElement("div");
-        info.className = "info";
-        info.textContent = `${materia.codigo} — ${materia.carga_horaria}`;
-
-        card.appendChild(nota);
-        card.appendChild(nombre);
-        card.appendChild(info);
-
-        card.addEventListener("click", () => {
-          if (!checkHabilitada(materia)) return;
-
-          if (!estaAprobada) {
-            const notaIngresada = prompt(`Ingrese nota para ${materia.nombre}:`);
-            const notaNum = parseFloat(notaIngresada);
-            if (!isNaN(notaNum) && notaNum >= 4 && notaNum <= 10) {
-              aprobadas.push({ codigo: materia.codigo, nota: notaNum });
-            }
-          } else {
-            aprobadas = aprobadas.filter(a => a.codigo !== materia.codigo);
-          }
-
-          renderMaterias();
-          actualizarResumen();
-        });
-
-        col.appendChild(card);
+  for (let tramo = 1; tramo <= 3; tramo++) {
+    const materiasTramo = materias.filter(m => m.tramo === tramo);
+    for (let i = 0; i < materiasTramo.length; i += 6) {
+      const columna = document.createElement("div");
+      columna.className = "columna";
+      materiasTramo.slice(i, i + 6).forEach(m => {
+        const tarjeta = crearTarjeta(m);
+        columna.appendChild(tarjeta);
       });
-
-      container.appendChild(col);
-    });
+      porTramo[tramo].appendChild(columna);
+    }
   }
-
-  actualizarResumen();
+  actualizarEstadoCorrelativas();
 }
 
-function chunkArray(arr, size) {
-  const resultado = [];
-  for (let i = 0; i < arr.length; i += size) {
-    resultado.push(arr.slice(i, i + size));
-  }
-  return resultado;
-}
+function crearTarjeta(materia) {
+  const div = document.createElement("div");
+  div.className = "materia";
+  div.id = `materia-${materia.codigo}`;
 
-function checkHabilitada(materia) {
-  if (!materia.requisitos || materia.requisitos.length === 0) return true;
-  return materia.requisitos.every(req =>
-    aprobadas.some(a => a.codigo === req)
-  );
+  const inputNota = document.createElement("input");
+  inputNota.type = "number";
+  inputNota.min = 4;
+  inputNota.max = 10;
+  inputNota.className = "nota-input";
+  inputNota.placeholder = "-";
+  inputNota.disabled = true;
+
+  const check = document.createElement("input");
+  check.type = "checkbox";
+  check.className = "check-aprobada";
+  check.onchange = () => {
+    inputNota.disabled = !check.checked;
+    if (!check.checked) {
+      inputNota.value = "";
+    }
+    actualizarResumen();
+    actualizarEstadoCorrelativas();
+  };
+
+  const label = document.createElement("label");
+  label.textContent = materia.nombre;
+  label.className = "nombre-materia";
+
+  div.appendChild(inputNota);
+  div.appendChild(check);
+  div.appendChild(label);
+
+  return div;
 }
 
 function actualizarResumen() {
-  const cantidad = aprobadas.length;
-  const total = materias.length;
-  const promedio =
-    aprobadas.reduce((acc, m) => acc + m.nota, 0) / (cantidad || 1);
+  const todas = document.querySelectorAll(".materia");
+  aprobadas = 0;
+  sumaNotas = 0;
 
-  document.getElementById("avance").textContent = `${cantidad} materias aprobadas — Avance: ${Math.round(
-    (cantidad / total) * 100
-  )}%`;
-  document.getElementById("promedio").textContent = `Promedio: ${promedio.toFixed(
-    2
-  )}`;
+  todas.forEach(m => {
+    const check = m.querySelector(".check-aprobada");
+    const notaInput = m.querySelector(".nota-input");
+
+    if (check.checked && notaInput.value >= 4) {
+      aprobadas++;
+      sumaNotas += parseFloat(notaInput.value);
+      m.classList.add("aprobada");
+    } else {
+      m.classList.remove("aprobada");
+    }
+  });
+
+  const porcentaje = Math.round((aprobadas / materias.length) * 100);
+  const promedio = aprobadas > 0 ? (sumaNotas / aprobadas).toFixed(2) : "0.00";
+
+  document.getElementById("avance").textContent = `${aprobadas} materias aprobadas — Avance: ${porcentaje}%`;
+  document.getElementById("promedio").textContent = `Promedio: ${promedio}`;
+}
+
+function actualizarEstadoCorrelativas() {
+  materias.forEach(m => {
+    const tarjeta = document.getElementById(`materia-${m.codigo}`);
+    const check = tarjeta.querySelector(".check-aprobada");
+    const nota = tarjeta.querySelector(".nota-input");
+
+    const habilitada = m.correlativas.every(cod => {
+      const corr = document.getElementById(`materia-${cod}`);
+      return corr && corr.querySelector(".check-aprobada").checked;
+    });
+
+    if (!habilitada) {
+      tarjeta.classList.add("bloqueada");
+      check.disabled = true;
+      nota.disabled = true;
+    } else {
+      tarjeta.classList.remove("bloqueada");
+      check.disabled = false;
+    }
+  });
 }
 
 function exportarResumen() {
   window.print();
 }
+
+cargarMaterias();
