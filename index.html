@@ -1,42 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plan de Estudios – UBA Sistemas</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <img src="logo-uba.png" alt="Logo UBA" class="logo-uba" />
-      <h1>Licenciatura en Sistemas <span class="facultad">– UBA</span></h1>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla Curricular - Licenciatura en Sistemas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <img src="logo-uba.png" alt="Logo UBA" class="logo-uba" />
+    <h1>Licenciatura en Sistemas</h1>
+  </header>
 
-    <div class="contenido">
-      <main class="tramos-container">
-        <section id="primer-tramo" class="tramo">
-          <h2>Primer Tramo</h2>
-          <div class="columnas" data-cols="1"></div>
-        </section>
-        <section id="segundo-tramo" class="tramo">
-          <h2>Segundo Tramo</h2>
-          <div class="columnas" data-cols="1"></div>
-        </section>
-        <section id="ciclo-profesional" class="tramo">
-          <h2>Ciclo Profesional</h2>
-          <div class="columnas" data-cols="3"></div>
-        </section>
-      </main>
+  <main class="tramos-container">
+    <section id="primer-tramo" class="tramo">
+      <h2>Primer Tramo</h2>
+      <div class="columnas"></div>
+    </section>
+    <section id="segundo-tramo" class="tramo">
+      <h2>Segundo Tramo</h2>
+      <div class="columnas"></div>
+    </section>
+    <section id="ciclo-profesional" class="tramo">
+      <h2>Ciclo Profesional</h2>
+      <div class="columnas"></div>
+    </section>
+  </main>
 
-      <section id="resumen">
-        <h2>Resumen</h2>
-        <p id="info-materias"></p>
-        <div id="exportacion">
-          <button onclick="window.print()">Exportar a PDF</button>
-        </div>
-      </section>
-    </div>
+  <aside id="resumen">
+    <p id="avance">0 materias aprobadas — Avance: 0%</p>
+    <p id="promedio">Promedio: 0.00</p>
+    <button onclick="exportarResumen()">📤 Exportar resumen en PDF</button>
+    <div id="exportacion"></div>
+  </aside>
 
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>
