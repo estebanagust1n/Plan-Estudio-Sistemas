@@ -1,108 +1,122 @@
 let materias = [];
-let materiasAprobadas = {};
+let aprobadas = [];
 
 fetch("materias.json")
-  .then((res) => res.json())
-  .then((data) => {
+  .then(res => res.json())
+  .then(data => {
     materias = data;
-    renderizarMaterias();
+    renderMaterias();
   });
 
-function renderizarMaterias() {
+function renderMaterias() {
   const tramos = {
     "Primer tramo": document.querySelector("#primer-tramo .columnas"),
     "Segundo tramo": document.querySelector("#segundo-tramo .columnas"),
-    "Ciclo Profesional": document.querySelector("#ciclo-profesional .columnas"),
+    "Ciclo Profesional": document.querySelector("#ciclo-profesional .columnas")
   };
 
-  Object.entries(tramos).forEach(([tramo, contenedor]) => {
-    const materiasTramo = materias.filter((m) => m.tramo === tramo);
-    const columnas = parseInt(contenedor.getAttribute("data-cols")) || 1;
-    const materiasPorColumna = Math.ceil(materiasTramo.length / columnas);
+  Object.values(tramos).forEach(div => div.innerHTML = "");
 
-    for (let i = 0; i < columnas; i++) {
+  const porTramo = {
+    "Primer tramo": [],
+    "Segundo tramo": [],
+    "Ciclo Profesional": []
+  };
+
+  materias.forEach(m => porTramo[m.tramo].push(m));
+
+  for (let tramo in porTramo) {
+    const container = tramos[tramo];
+    const grupos = chunkArray(porTramo[tramo], 6);
+
+    grupos.forEach(grupo => {
       const col = document.createElement("div");
       col.classList.add("columna");
-      contenedor.appendChild(col);
-    }
 
-    materiasTramo.forEach((materia, index) => {
-      const card = crearCardMateria(materia);
-      const columna = contenedor.children[Math.floor(index / materiasPorColumna)];
-      columna.appendChild(card);
+      grupo.forEach(materia => {
+        const card = document.createElement("div");
+        card.classList.add("materia");
+
+        const estaAprobada = aprobadas.some(a => a.codigo === materia.codigo);
+        const habilitada = checkHabilitada(materia);
+
+        if (estaAprobada) card.classList.add("aprobada");
+        else if (!habilitada) card.classList.add("bloqueada");
+        else card.classList.add("habilitada");
+
+        const nota = document.createElement("div");
+        nota.className = "nota";
+        nota.textContent = estaAprobada
+          ? aprobadas.find(a => a.codigo === materia.codigo).nota
+          : "";
+
+        const nombre = document.createElement("div");
+        nombre.textContent = materia.nombre;
+
+        const info = document.createElement("div");
+        info.className = "info";
+        info.textContent = `${materia.codigo} — ${materia.carga_horaria}`;
+
+        card.appendChild(nota);
+        card.appendChild(nombre);
+        card.appendChild(info);
+
+        card.addEventListener("click", () => {
+          if (!checkHabilitada(materia)) return;
+
+          if (!estaAprobada) {
+            const notaIngresada = prompt(`Ingrese nota para ${materia.nombre}:`);
+            const notaNum = parseFloat(notaIngresada);
+            if (!isNaN(notaNum) && notaNum >= 4 && notaNum <= 10) {
+              aprobadas.push({ codigo: materia.codigo, nota: notaNum });
+            }
+          } else {
+            aprobadas = aprobadas.filter(a => a.codigo !== materia.codigo);
+          }
+
+          renderMaterias();
+          actualizarResumen();
+        });
+
+        col.appendChild(card);
+      });
+
+      container.appendChild(col);
     });
-  });
+  }
 
   actualizarResumen();
 }
 
-function crearCardMateria(materia) {
-  const div = document.createElement("div");
-  div.className = "materia bloqueada";
-  div.dataset.codigo = materia.codigo;
-
-  const notaInput = document.createElement("input");
-  notaInput.className = "nota";
-  notaInput.type = "text";
-  notaInput.maxLength = 2;
-
-  const nombre = document.createElement("div");
-  nombre.textContent = materia.nombre;
-
-  const codigo = document.createElement("div");
-  codigo.style.fontSize = "12px";
-  codigo.textContent = materia.codigo;
-
-  div.appendChild(notaInput);
-  div.appendChild(codigo);
-  div.appendChild(nombre);
-
-  div.addEventListener("click", () => {
-    if (div.classList.contains("bloqueada")) return;
-
-    const aprobada = div.classList.toggle("aprobada");
-
-    if (aprobada) {
-      notaInput.style.display = "inline-block";
-      notaInput.focus();
-    } else {
-      notaInput.value = "";
-      notaInput.style.display = "none";
-    }
-
-    materiasAprobadas[materia.codigo] = aprobada;
-    actualizarHabilitadas();
-    actualizarResumen();
-  });
-
-  return div;
+function chunkArray(arr, size) {
+  const resultado = [];
+  for (let i = 0; i < arr.length; i += size) {
+    resultado.push(arr.slice(i, i + size));
+  }
+  return resultado;
 }
 
-function actualizarHabilitadas() {
-  document.querySelectorAll(".materia").forEach((el) => {
-    const codigo = el.dataset.codigo;
-    const materia = materias.find((m) => m.codigo === codigo);
-    const requisitos = materia.requisitos || [];
-
-    if (materiasAprobadas[codigo]) {
-      el.classList.remove("bloqueada");
-      el.classList.add("aprobada");
-    } else if (requisitos.every((r) => materiasAprobadas[r])) {
-      el.classList.remove("bloqueada");
-      el.classList.remove("aprobada");
-      el.classList.add("habilitada");
-    } else {
-      el.classList.remove("aprobada", "habilitada");
-      el.classList.add("bloqueada");
-    }
-  });
+function checkHabilitada(materia) {
+  if (!materia.requisitos || materia.requisitos.length === 0) return true;
+  return materia.requisitos.every(req =>
+    aprobadas.some(a => a.codigo === req)
+  );
 }
 
 function actualizarResumen() {
-  const aprobadas = Object.values(materiasAprobadas).filter(Boolean).length;
+  const cantidad = aprobadas.length;
   const total = materias.length;
-  const porcentaje = Math.round((aprobadas / total) * 100);
-  document.getElementById(
-    "info-materias"
-  ).textContent = `Aprobadas: ${aprobadas}/${total} – ${porcentaje}% completado`;
+  const promedio =
+    aprobadas.reduce((acc, m) => acc + m.nota, 0) / (cantidad || 1);
+
+  document.getElementById("avance").textContent = `${cantidad} materias aprobadas — Avance: ${Math.round(
+    (cantidad / total) * 100
+  )}%`;
+  document.getElementById("promedio").textContent = `Promedio: ${promedio.toFixed(
+    2
+  )}`;
+}
+
+function exportarResumen() {
+  window.print();
 }
